@@ -6,7 +6,9 @@ const app = require('../index')
 chai.use(chaiHttp)
 chai.should()
 
+// eslint-disable-next-line no-undef
 describe('Make sure status is 200', () => {
+  // eslint-disable-next-line no-undef
   it('Should return 200', (done) => {
     chai.request(app)
       .get('/')
