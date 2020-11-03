@@ -19,3 +19,17 @@ describe('Make sure status is 200', () => {
       })
   })
 })
+
+// eslint-disable-next-line no-undef
+describe('Make sure register page fails when no data is supplied', () => {
+  // eslint-disable-next-line no-undef
+  it('Should return 400', (done) => {
+    chai.request(app)
+      .post('/register')
+      .end((_err, res) => {
+        res.should.have.status(400)
+        // res.body.should.be.a('object')
+        done()
+      })
+  })
+})
