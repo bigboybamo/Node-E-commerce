@@ -5,7 +5,7 @@ const registerSchema = Joi.object({
   name: Joi.string()
     .trim()
     .min(3)
-    .max(30)
+    .max(64)
     .required(),
 
   password: Joi.string()
