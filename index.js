@@ -1,7 +1,8 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const session = require('express-session')
-
+const passport = require('passport')
+require('./utils/authStategies/localStrategy')
 const authRoutes = require('./routes/authRoutes')
 
 require('./utils/db.config')
@@ -16,13 +17,16 @@ app.use(session({
   cookie: { secure: false }
 }))
 
+app.use(passport.initialize())// initialize passport
+app.use(passport.session())// add session support for passport
+
 app.set('view engine', 'ejs')
 
 app.use('/', authRoutes)
 
 app.get('/', (req, res) => {
   req.session.views = (req.session.views || 0) + 1
-  console.log(`You have visited our site ${req.session.views} times`)
+  console.log(`user: ${req.user}`)
   res.render('index')
 })
 
