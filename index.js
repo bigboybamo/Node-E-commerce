@@ -24,6 +24,11 @@ app.use(session({
 app.use(passport.initialize())// initialize passport
 app.use(passport.session())// add session support for passport
 
+// added app.locals object to be used in the views
+app.locals.message = { }
+app.locals.formData = {}
+app.locals.errors = {}
+
 app.set('view engine', 'ejs')
 
 app.use('/', authRoutes)
