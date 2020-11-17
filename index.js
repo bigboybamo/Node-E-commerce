@@ -34,8 +34,11 @@ app.set('view engine', 'ejs')
 app.use('/', authRoutes)
 
 app.get('/', (req, res) => {
-  console.log(`user: ${req.user}`)
-  res.render('index')
+  if (!req.user) {
+    res.render('index', { message: { login_info: false } })
+  } else {
+    res.render('index', { message: { login_info: true } })
+  }
 })
 
 app.get('/homepage', authMiddleware, (req, res) => {
