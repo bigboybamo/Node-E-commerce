@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
+const logger = require('morgan')
 const mongoDbConnect = require('./utils/db.config')
 const passport = require('passport')
 require('./utils/authStategies/localStrategy')
@@ -21,6 +22,7 @@ app.use(session({
   store: new MongoStore({ mongooseConnection: mongoDbConnect })
 }))
 
+app.use(logger('dev'))
 app.use(passport.initialize())// initialize passport
 app.use(passport.session())// add session support for passport
 
