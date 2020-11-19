@@ -8,6 +8,7 @@ const guestMiddleware = require('../middlewares/guestMiddleware')
 const passport = require('passport')
 const authMiddleware = require('../middlewares/authMiddleware')
 const flashMiddleware = require('../middlewares/flasherMiddleware')
+
 router.get('/register', guestMiddleware, flashMiddleware, (req, res) => {
   res.render('register')
 })
@@ -38,7 +39,7 @@ router.post('/register', guestMiddleware, async (req, res) => {
       },
       formData: req.body
     }
-    return res.redirect('/register')
+    return res.redirect('register')
   } catch (error) {
     console.log(error)
     return res.status(400).render('register', {
@@ -56,17 +57,40 @@ router.get('/login', guestMiddleware, (req, res) => {
   res.render('login')
 })
 
-router.post('/login', guestMiddleware, passport.authenticate('local',
-  {
-    successRedirect: '/',
-    failureRedirect: '/login'
-  }), (req, res) => {
-  res.render('login', {
-    message: {
-      type: 'success',
-      body: 'Login successful'
+router.post('/login', guestMiddleware, (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) {
+      console.log(`Err : ${err}`)
+      req.session.flashData = {
+        message: {
+          type: 'error',
+          body: 'Login failed'
+        }
+      }
+      return res.redirect('login')
     }
-  })
+
+    if (!user) {
+      req.session.flashData = {
+        message: {
+          type: 'error',
+          body: info.error
+        }
+      }
+      return res.redirect('/login')
+    }
+    req.logIn(user, (err) => {
+      if (err) {
+        req.session.flashData = {
+          message: {
+            type: 'error',
+            body: 'Login failed'
+          }
+        }
+      }
+      return res.redirect('/homepage')
+    })
+  })(req, res, next)
 })
 
 // log out a user
